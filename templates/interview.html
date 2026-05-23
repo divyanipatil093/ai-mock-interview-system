@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview</title>
+</head>
+<body>
+
+    <h2>AI Interview</h2>
+
+    <p><b>Name:</b> {{ name }}</p>
+    <p><b>Role:</b> {{ role }}</p>
+
+    <hr>
+
+    <h3>Question:</h3>
+    <p>{{ question }}</p>
+
+    <form action="/submit_answer" method="POST">
+
+        <textarea name="answer" rows="6" cols="60" placeholder="Type your answer..." required></textarea>
+
+        <br><br>
+
+        <button type="submit">Submit Answer</button>
+
+    </form>
+
+</body>
+</html>
