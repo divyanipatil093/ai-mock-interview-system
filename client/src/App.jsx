@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import { setUserData } from "./redux/userSlice";
+import InterviewPage from "./pages/InterviewPage";
 
 export const ServerUrl = "http://localhost:8000"
 
@@ -27,6 +28,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/interview" element={<InterviewPage />} />
     </Routes>
   )
 }

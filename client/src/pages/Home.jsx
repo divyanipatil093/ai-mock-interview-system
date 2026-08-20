@@ -23,7 +23,7 @@ import pdfImg from "../assets/pdf.png";
 import analyticsImg from "../assets/history.png";
 import img1 from "../assets/img1.png";
 import { model } from 'mongoose';
-
+import Footer from '../components/Footer'
 
 function Home() {
   const{userData} = useSelector((state)=>state.user)
@@ -279,7 +279,13 @@ function Home() {
                       </div>  
 
                       {/* RIGHT IMAGE*/}
-                      
+                      <div className='w-1/2 flex justify-end'>
+                        <img
+                          src={mode.image}
+                          alt={mode.title}
+                          className='w-28 h-28 object-contain'
+                        />
+                      </div>
                       </div>
                     </motion.div>
                 ))
@@ -298,6 +304,8 @@ function Home() {
       </div>
 
       {showAuth && <AuthModel onClose = {() => setShowAuth(false)}/>}
+
+        <Footer/>
 
     </div>
   )
