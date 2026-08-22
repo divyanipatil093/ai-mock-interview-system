@@ -34,14 +34,12 @@ const interviewSchema = new mongoose.Schema({
     resumeText:{
         type:String
     },
-    questions:{
-        questions:[questionsSchema],
-        finalScore: {type: Number, default: 0},
-        status: {
-            type: String,
-            enum: ["Incompleted","Completed"],
-            default:"Incompleted",
-        }
+    questions:[questionsSchema],
+    finalScore: {type: Number, default: 0},
+    status: {
+        type: String,
+        enum: ["Incompleted","Completed"],
+        default:"Incompleted",
     }
 
 },{timestamps:true})

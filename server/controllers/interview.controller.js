@@ -82,15 +82,16 @@ export const analyzeResume = async (req, res) => {
 };
 
 export const generateQuestion = async (req, res) => {
-    try{
-        let { role, experience, mode, resumeText, projects, skills} = req.body
+    try {
+        let { role, experience, mode, resumeText, projects, skills } = req.body
 
         role = role?.trim();
         experience = experience?.trim();
         mode = mode?.trim();
 
-        if(!role || !experience || !mode){
-            return res.status(400).json({message:"Role, Experience and Mode are required."
+        if (!role || !experience || !mode) {
+            return res.status(400).json({
+                message: "Role, Experience and Mode are required."
             })
         }
         const user = await User.findById(req.userId)
@@ -107,121 +108,119 @@ export const generateQuestion = async (req, res) => {
             });
         }
 
-            const projectText = Array.isArray(projects) && projects.length
+        const projectText = Array.isArray(projects) && projects.length
             ? projects.join(",")
-            :"None";
+            : "None";
 
-            const skillsText = Array.isArray(skills) && skills.length
+        const skillsText = Array.isArray(skills) && skills.length
             ? skills.join(",")
-            :"None";
+            : "None";
 
-            const safeResume = resumeText?.trim() || "None";
+        const safeResume = resumeText?.trim() || "None";
 
-            const userPromt =`
-            Role:${role}
-            Experience:${experience}
-            InterviewMode:${mode}
-            Projects:${projectText}
-            Skills:${skillsText},
-            Resume:${safeResume}
-            `;
+        const userPromt = `
+        Role:${role}
+        Experience:${experience}
+        InterviewMode:${mode}
+        Projects:${projectText}
+        Skills:${skillsText},
+        Resume:${safeResume}
+        `;
 
-            if (!userPromt.trim()) {
-                return res.status(404).json({
-                    message:"Prompt content is empty."
-                });
+        if (!userPromt.trim()) {
+            return res.status(404).json({
+                message: "Prompt content is empty."
+            });
+        }
+
+        const messages = [
+            {
+                role: "system",
+                content: `
+                You are a real human interviewer conducting a professional interview.
+                
+                Speak in simple, natural English as if you are directly talking to the candidate.
+                
+                Generate exactly 5 interview questions.
+                
+                Strict Rules:
+                - Each question must contain between 15 and 25 words.
+                - Each question must be a single complete sentence.
+                - Do NOT number them.
+                - Do NOT add explanations.
+                - Do NOT add extra text before or after.
+                - One question per line only.
+                - Keep language simple and conversational.
+                - Question must feel practical and realistic.
+                
+                Difficulty progression:
+                Question 1 → easy
+                Question 2 → easy
+                Question 3 → medium
+                Question 4 → medium
+                Question 5 → hard
+                
+                Make questions based on the candidate's role, experience,interviewMode, projects,
+                sklls, and resume datails.
+                `
+            },
+            {
+                role: "user",
+                content: userPromt
             }
+        ];
 
-            const messages = [
-                {
-                    role:"system",
-                    content:`
-                    You are a real human interviewer conducting a professional interview.
-                    
-                    Speak in simple, natural English as if you are directly talking to the candidate.
-                    
-                    Generate exactly 5 interview questions.
-                    
-                    Strict Rules:
-                    - Each question must contain between 15 and 25 words.
-                    - Each question must be a single complete sentence.
-                    - Do NOT number them.
-                    - Do NOT add explanations.
-                    - Do NOT add extra text before or after.
-                    - One question per line only.
-                    - Keep language simple and conversational.
-                    - Question must feel practical and realistic.
-                    
-                    Difficulty progression:
-                    Question 1 → easy
-                    Question 2 → easy
-                    Question 3 → medium
-                    Question 4 → medium
-                    Question 5 → hard
-                    
-                    Make questions based on the candidate's role, experience,interviewMode, projects,
-                    sklls, and resume datails.
-                    `
-                },
-                    {
-                        role:"user",
-                        content: userPromt
-                    }
-            ];
+        const aiResponse = await askAi(messages)
 
+        if (!aiResponse || !aiResponse.trim()) {
+            return res.status(500).json({
+                message: "AI returned empty response."
+            });
+        }
 
-            const aiResponse = await askAi(messages)
+        const questionsArray = aiResponse
+            .split("\n")
+            .map(q => q.trim())
+            .filter(q => q.length > 0)
+            .slice(0, 5);
 
-                if (!aiResponse || !aiResponse.trim()) {                    
-                return res.status(500).json({
-                    message: "AI returned empty response."
-                });                
-            }
+        if (questionsArray.length === 0) {
+            return res.status(500).json({
+                message: "AI failed to generate questions."
+            });
+        }
 
-            const questionsArray = aiResponse
-                .split("\n")
-                .map(q => q.trim())
-                .filter(q => q.length > 0)
-                .slice(0, 5);
+        user.credits -= 50;
+        await user.save();
 
-            if (questionsArray.length === 0) {                
-                return res.status(500).json({
-                    message: "AI failed to generate questions."
-                });
-            }
+        const interview = await Interview.create({
+            userId: user._id,
+            role,
+            experience,
+            mode,
+            resumeText: safeResume,
+            questions: questionsArray.map((q, index) => ({
+                question: q,
+                difficulty: ["easy", "easy", "medium", "medium", "hard"][index],
+                timeLimit: [60, 60, 90, 90, 120][index],
+            }))
+        })
 
-            user.credits -= 50;
-            await user.save();
+        res.json({
+            interviewId: interview._id,
+            creditsLeft: user.credits,
+            userName: user.name,
+            questions: interview.questions
+        });
 
-            const interview = await Interview.create({
-                userId: user._id,
-                role,
-                experience,
-                mode,
-                resumeText: safeResume,
-                questions: questionsArray.map((q, index) => ({
-                    question: q,
-                    difficulty: ["easy","easy","medium","medium","hard"][index],
-                    timelimit: [60,60,90,90,120][index],
-                }))
-                })
-
-                res.json({
-                    interviewId: interview._id,
-                    creditsLeft: user.credits,
-                    userName: user.name,
-                    questions: interview.questions
-                });
-            
-
-    }catch(error) {        
-        return res.status(500).json({message:`failed to create interview ${error}`})
+    } catch (error) {
+        return res.status(500).json({ message: `failed to create interview ${error}` })
     }
 }
 
-export const submitAnswer = async(req,res) => {
-    try{
-        const {interviewId, questionIndex, answer, timetaken} =req.body
+export const submitAnswer = async (req, res) => {
+    try {
+        const { interviewId, questionIndex, answer, timeTaken } = req.body
 
         const interview = await Interview.findById(interviewId)
         const question = interview.questions[questionIndex]
@@ -308,29 +307,36 @@ export const submitAnswer = async(req,res) => {
 
         const aiResponse = await askAi(messages)
 
+        const cleanedResponse = aiResponse
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+        const parsed = JSON.parse(cleanedResponse)
+
         question.answer = answer;
         question.confidence = parsed.confidence;
         question.communication = parsed.communication;
         question.correctness = parsed.correctness;
-        question.score = parsed.score;
+        question.score = parsed.finalScore;
         question.feedback = parsed.feedback;
         await interview.save();
 
-        return res.status(200).json({feedback :parsed.feedback})
+        return res.status(200).json({ feedback: parsed.feedback })
 
-    }catch (error) {
-        return res.status(500).json({message:`failed to submit answer ${error}`})
+    } catch (error) {
+        return res.status(500).json({ message: `failed to submit answer ${error}` })
     }
 }
 
 
 
-export const finishInterview = async (req,res) => {
-    try{
-        const {interviewId} = req.body
+export const finishInterview = async (req, res) => {
+    try {
+        const { interviewId } = req.body
         const interview = await Interview.findById(interviewId)
-        if(!interview) {
-            return res.status(400).json({message:"failed to find Interview"})
+        if (!interview) {
+            return res.status(400).json({ message: "failed to find Interview" })
         }
 
         const totalQuestions = interview.questions.length;
@@ -364,7 +370,7 @@ export const finishInterview = async (req,res) => {
             : 0;
 
         interview.finalScore = finalScore;
-        interview.status = "completed";
+        interview.status = "Completed";
 
         await interview.save();
 
@@ -384,6 +390,6 @@ export const finishInterview = async (req,res) => {
         })
 
     } catch (error) {
-        return res.status(500).json({message:`failed to finish Interview ${error}`})
+        return res.status(500).json({ message: `failed to finish Interview ${error}` })
     }
 }
