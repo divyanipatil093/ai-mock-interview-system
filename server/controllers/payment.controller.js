@@ -1,6 +1,7 @@
 import razorpay from "../services/razorpay.service.js";
 import Payment from "../models/payment.model.js";
 import crypto from "crypto"
+import User from "../models/user.model.js";
 
 export const createOrder = async (req, res) => {
     try {
@@ -12,7 +13,7 @@ export const createOrder = async (req, res) => {
         const options = {
             amount: amount * 100, //convert to paise
             currency: "INR",
-            receipt: `receipt_${DataTransfer.now()}`,
+            receipt: `receipt_${Date.now()}`,
         };
 
         const order = await razorpay.orders.create(options)
