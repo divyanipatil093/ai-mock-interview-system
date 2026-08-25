@@ -89,7 +89,7 @@ function Step1SetUp({onStart}) {
         bg-gradient-to-br from-gray-100 to-gray-200 px-4">
 
             <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl
-             grid grid-cols-2 overflow-hidden">
+                 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
 
                 <motion.div
                 initial={{ x:-80 ,opacity: 0}}
