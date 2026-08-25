@@ -66,7 +66,7 @@ function Step1SetUp({onStart}) {
                     dispatch(setUserData({...userData, credits: result.data.creditsLeft}))
                  }
                  setLoading(false)
-                 onStart(result.data)
+                 onStart({ ...result.data, mode })
 
         } catch (error) {
   
