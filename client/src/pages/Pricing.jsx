@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { color, motion, scale } from "motion/react";
 import axios from "axios";
 import { ServerUrl } from "../App";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 function Pricing() {
     const navigate = useNavigate()
     const [selectedPlan, setSelectePlan] = useState("free");
     const [loadingPlan, setLoadingPlan] = useState(null);
+    const dispatch = useDispatch()
 
     const plans = [
         {
@@ -80,8 +83,11 @@ function Pricing() {
 
                     handler:async function (response) {
                         const verifypay = await axios.post(ServerUrl + "/api/payment/verify",
-                            response,{withCredentials:true}
-                        )
+                            response,{withCredentials:true})
+                            dispatch(setUserData(verifypay.data.user))
+                            alert("Paysmet Successful 🎉 Credits Added!");
+                            navigate("/")
+                        
                     },
                     theme:{
                         color:"#10b981",

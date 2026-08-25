@@ -109,7 +109,7 @@ function Home() {
                 {
                   icon:<BsRobot size={24} />,
                   step: "STEP 1",
-                  title: "Role & Experience Selectio",
+                  title: "Role & Experience Selection",
                   desc: "AI adjusts difficulty based on selected job role."
                 },
                 {
