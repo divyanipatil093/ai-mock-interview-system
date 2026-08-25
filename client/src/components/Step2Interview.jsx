@@ -13,7 +13,7 @@ import { BsArrowRight } from "react-icons/bs";
 // import { finishInterview } from "../../../server/controllers/interview.controller";
 
 function Step2Interview({ interviewData, onFinish }) {
-    const { interviewId, questions, userName } = interviewData;
+    const { interviewId, questions, userName, mode } = interviewData;
     const [isIntroPhase, setIsIntroPhase] = useState(true);
 
     const [isMicOn, setIsMicOn] = useState(true);
@@ -37,47 +37,33 @@ function Step2Interview({ interviewData, onFinish }) {
     const currentQuestion = questions[currentIndex];
 
 
+   const targetGender = mode === "HR" ? "male" : "female";
+
     useEffect(()=>{
         const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices();
         if (!voices.length) return;
 
-        // Try known female voices first
-        const femaleVoice =
-            voices.find(v =>
-                v.name.toLowerCase().includes("zira") ||
-                v.name.toLowerCase().includes("samantha") ||
-                v.name.toLowerCase().includes("female")
-            );
+        const femaleNames = ["zira", "samantha", "female"];
+        const maleNames = ["david", "mark", "male"];
 
-        if (femaleVoice) {
-            setSelectedVoice(femaleVoice);
-            setVoiceGender("female");
-            return;
-        }
+        const findVoice = (names) =>
+            voices.find(v => names.some(n => v.name.toLowerCase().includes(n)));
 
-        // Try known male voices
-        const maleVoice =
-            voices.find(v =>
-                v.name.toLowerCase().includes("david") ||
-                v.name.toLowerCase().includes("mark") ||
-                v.name.toLowerCase().includes("male")
-            );
+        // Search for a voice matching the mode's target gender first,
+        // fall back to the other gender's list, then to any available voice.
+        const matchedVoice =
+            targetGender === "male"
+                ? findVoice(maleNames) || findVoice(femaleNames)
+                : findVoice(femaleNames) || findVoice(maleNames);
 
-        if (maleVoice) {
-            setSelectedVoice(maleVoice);
-            setVoiceGender("male");
-            return;
-        }
-
-        // Fallback: first voice (assume female)
-        setSelectedVoice(voices[0]);
-        setVoiceGender("female");
+        setSelectedVoice(matchedVoice || voices[0]);
+        setVoiceGender(targetGender);
     };
 
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
-    },[])
+    },[mode])
 
     const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
 
