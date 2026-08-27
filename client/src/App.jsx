@@ -9,8 +9,10 @@ import InterviewPage from "./pages/InterviewPage";
 import InterviewHistory from "./pages/InterviewHistory";
 import InterviewReport from "./pages/InterviewReport";
 import Pricing from "./pages/Pricing"; 
+import ResumeAnalyzer from "./pages/ResumeAnalyzer";
 
 export const ServerUrl = "http://localhost:8000"
+// export const ServerUrl = "https://ai-mock-interview-system-xacs.onrender.com"
 
 function App() {
 
@@ -35,6 +37,7 @@ function App() {
       <Route path="/history" element={<InterviewHistory />} />
       <Route path="/report/:id" element={<InterviewReport />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
 
     </Routes>
   )

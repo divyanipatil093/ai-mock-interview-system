@@ -11,7 +11,7 @@ function Footer() {
                     <h2 className="font-semibold">InterviewIQ.AI</h2>
                 </div>
                 <p className="text-gray-500 text-sm max-w-xl mx-auto">
-                    AI-powerd interview preparation platform designed to improve communication skills,
+                    AI-powered interview preparation platform designed to improve communication skills,
                     technical depth and professional confidence.
                 </p>
             </div>

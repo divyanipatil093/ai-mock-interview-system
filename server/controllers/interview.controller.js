@@ -161,7 +161,7 @@ export const generateQuestion = async (req, res) => {
                 Question 5 → hard
                 
                 Make questions based on the candidate's role, experience,interviewMode, projects,
-                sklls, and resume datails.
+                skills, and resume details.
                 `
             },
             {
@@ -448,5 +448,29 @@ export const getInterviewReport = async (req,res) => {
             });
     } catch(error){
         return res.status(500).json({ message: `failed to find currentUser Interview ${error}` })
+    }
+}
+
+//Deleting interview
+export const deleteInterviews = async (req, res) => {
+    try {
+        const { interviewIds } = req.body
+
+        if (!Array.isArray(interviewIds) || interviewIds.length === 0) {
+            return res.status(400).json({ message: "No interviews selected." })
+        }
+
+        const result = await Interview.deleteMany({
+            _id: { $in: interviewIds },
+            userId: req.userId   // ensures a user can only delete their own records
+        })
+
+        return res.status(200).json({
+            message: "Selected interviews deleted.",
+            deletedCount: result.deletedCount
+        })
+
+    } catch (error) {
+        return res.status(500).json({ message: `Failed to delete interviews ${error}` })
     }
 }

@@ -13,7 +13,7 @@ import { BsArrowRight } from "react-icons/bs";
 // import { finishInterview } from "../../../server/controllers/interview.controller";
 
 function Step2Interview({ interviewData, onFinish }) {
-    const { interviewId, questions, userName } = interviewData;
+    const { interviewId, questions, userName, mode } = interviewData;  // const { interviewId, questions, userName } = interviewData;
     const [isIntroPhase, setIsIntroPhase] = useState(true);
 
     const [isMicOn, setIsMicOn] = useState(true);
@@ -37,50 +37,85 @@ function Step2Interview({ interviewData, onFinish }) {
     const currentQuestion = questions[currentIndex];
 
 
+    // useEffect(()=>{
+    //     const loadVoices = () => {
+    //     const voices = window.speechSynthesis.getVoices();
+    //     if (!voices.length) return;
+
+    //     // Try known female voices first
+    //     const femaleVoice =
+    //         voices.find(v =>
+    //             v.name.toLowerCase().includes("zira") ||
+    //             v.name.toLowerCase().includes("samantha") ||
+    //             v.name.toLowerCase().includes("female")
+    //         );
+
+    //     if (femaleVoice) {
+    //         setSelectedVoice(femaleVoice);
+    //         setVoiceGender("female");
+    //         return;
+    //     }
+
+    //     // Try known male voices
+    //     const maleVoice =
+    //         voices.find(v =>
+    //             v.name.toLowerCase().includes("david") ||
+    //             v.name.toLowerCase().includes("mark") ||
+    //             v.name.toLowerCase().includes("male")
+    //         );
+
+    //     if (maleVoice) {
+    //         setSelectedVoice(maleVoice);
+    //         setVoiceGender("male");
+    //         return;
+    //     }
+
+    //     // Fallback: first voice (assume female)
+    //     setSelectedVoice(voices[0]);
+    //     setVoiceGender("female");
+    // };
+
+    // loadVoices();
+    // window.speechSynthesis.onvoiceschanged = loadVoices;
+    // },[])
+
+
+
+
+        const targetGender = mode === "HR" ? "male" : "female";
+
     useEffect(()=>{
         const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices();
         if (!voices.length) return;
 
-        // Try known female voices first
-        const femaleVoice =
-            voices.find(v =>
-                v.name.toLowerCase().includes("zira") ||
-                v.name.toLowerCase().includes("samantha") ||
-                v.name.toLowerCase().includes("female")
-            );
+        const femaleNames = ["zira", "samantha", "female"];
+        const maleNames = ["david", "mark", "male"];
 
-        if (femaleVoice) {
-            setSelectedVoice(femaleVoice);
-            setVoiceGender("female");
-            return;
-        }
+        const findVoice = (names) =>
+            voices.find(v => names.some(n => v.name.toLowerCase().includes(n)));
 
-        // Try known male voices
-        const maleVoice =
-            voices.find(v =>
-                v.name.toLowerCase().includes("david") ||
-                v.name.toLowerCase().includes("mark") ||
-                v.name.toLowerCase().includes("male")
-            );
+        // Search for a voice matching the mode's target gender first,
+        // fall back to the other gender's list, then to any available voice.
+        const matchedVoice =
+            targetGender === "male"
+                ? findVoice(maleNames) || findVoice(femaleNames)
+                : findVoice(femaleNames) || findVoice(maleNames);
 
-        if (maleVoice) {
-            setSelectedVoice(maleVoice);
-            setVoiceGender("male");
-            return;
-        }
-
-        // Fallback: first voice (assume female)
-        setSelectedVoice(voices[0]);
-        setVoiceGender("female");
+        setSelectedVoice(matchedVoice || voices[0]);
+        setVoiceGender(targetGender);
     };
 
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
-    },[])
+    },[mode])
 
-    const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
+        const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
 
+
+
+
+        
 
     
     /* ------------SPEAK FUNCTION------------ */
@@ -142,11 +177,11 @@ function Step2Interview({ interviewData, onFinish }) {
         const runIntro = async ()=>{
             if(isIntroPhase){
                 await speakText(
-                    `Hi ${userName}, it's gret to meet you today. I hope you're feeling 
+                    `Hi ${userName}, it's great to meet you today. I hope you're feeling 
                     confident and ready.`
                 );
                 await speakText(
-                    "I'll ask you a few qeustions. Just answer naturally, and take your time. Let's begin."
+                    "I'll ask you a few questions. Just answer naturally, and take your time. Let's begin."
                 );
 
                 setIsIntroPhase(false)
@@ -155,7 +190,7 @@ function Step2Interview({ interviewData, onFinish }) {
 
                 // If last question (hard level)
                 if (currentIndex === questions.length - 1){
-                    await speakText("Alright, this one might be a bit mpre challenging.");
+                    await speakText("Alright, this one might be a bit more challenging.");
                 }
 
                 await speakText(currentQuestion.question);
@@ -201,7 +236,7 @@ function Step2Interview({ interviewData, onFinish }) {
 
         const recognition = new window.webkitSpeechRecognition();
         recognition.lang = "en-US";
-        recognition.continous = true;
+        recognition.continuous = true;
         recognition.interimResults = false;
 
         recognition.onresult = (event) => {
@@ -305,7 +340,7 @@ function Step2Interview({ interviewData, onFinish }) {
         if(!currentQuestion) return;
 
         if(timeLeft === 0 && !isSubmitting && !feedback){
-            SubmitAnswer();  //handleSubmit()
+            submitAnswer();
         }
     },[timeLeft]);
 

@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     credits: {
         type: Number,
         default:100
+    },
+    password: {
+        type: String,
+        select: false
     }
 
 }, { timestamps: true })

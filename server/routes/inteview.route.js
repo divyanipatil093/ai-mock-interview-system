@@ -1,8 +1,7 @@
 import express from "express";
 import { upload } from "../middlewares/multer.js";
 import isAuth from "../middlewares/isAuth.js";
-import { analyzeResume, finishInterview, generateQuestion, getMyInterviews, getInterviewReport, submitAnswer } from "../controllers/interview.controller.js";
-
+import { analyzeResume, finishInterview, generateQuestion, getMyInterviews, getInterviewReport, submitAnswer, deleteInterviews } from "../controllers/interview.controller.js";
 const interviewRouter = express.Router();
 
 // const upload = multer({ storage: multer.memoryStorage() });
@@ -20,6 +19,8 @@ interviewRouter.post("/finish",isAuth,finishInterview);
 
 interviewRouter.get("/get-interview",isAuth,getMyInterviews)
 interviewRouter.get("/report/:id",isAuth,getInterviewReport)
+
+interviewRouter.delete("/delete-interviews", isAuth, deleteInterviews)
 
 
 export default interviewRouter;

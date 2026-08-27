@@ -39,7 +39,7 @@ function Home() {
           <div className='bg-gray-50 text-gray-600 text-sm px-4 py-2
            rounded-full flex items-center gap-2'>
             <HiSparkles size={16} className="bg-green-50 text-green-600"/>
-            AI Powered Smart Interview PLatform
+            AI Powered Smart Interview Platform
           </div>
         </div>
         <div className='text-center mb-2'>
@@ -100,6 +100,21 @@ function Home() {
 
               </motion.button>
 
+              <motion.button
+              onClick={()=>{
+                if(!userData){
+                  setShowAuth(true)
+                  return;
+                }
+                navigate("/resume-analyzer")
+              }}
+              whileHover={{ opacity: 0.9, scale: 1.03 }}
+              whileTap={{ opacity: 1, scale: 0.97 }}
+              className='border border-gray-300 px-10 py-3 rounded-full hover:bg-gray-100 transition'>
+                Analyze Resume
+
+              </motion.button>
+
             </div>
           </div>
 
@@ -133,7 +148,7 @@ function Home() {
                 
                 className={`
                 relative bg-white rounded-3xl border-2 border-green-100 hover:border-green-500
-                 p-10 w-80 max-w-[90%] shadow-md hover:shadow-2xl transition-all duation-300
+                 p-10 w-80 max-w-[90%] shadow-md hover:shadow-2xl transition-all duration-300
                  ${index === 0 ? "rotate-[-4deg]":""}
                  ${index === 1 ? "rotate-[3deg] md:-mt-6 shadow-xl":""}
                  ${index === 2 ? "rotate-[-3deg]":""}
@@ -148,7 +163,7 @@ function Home() {
                     <div className='text-xs text-green-600 font-semibold mb-2
                      tracking-wider'>{item.step}</div>
                     <h3 className='font-semibold mb-3 text-lg'>{item.title}</h3>
-                    <p className='textsm text-gray-500 leading-relaxed'>{item.desc}</p>
+                    <p className='text-sm text-gray-500 leading-relaxed'>{item.desc}</p>
                   </div>
 
                 </motion.div>
@@ -177,7 +192,7 @@ function Home() {
                     image: confidenceImg,
                     icon:<BsBarChart size={20}/>,
                     title:"AI Answer Evaluation",
-                    desc:"Scores communication, technical accuracy and confidencs."
+                    desc:"Scores communication, technical accuracy and confidence."
                   },
                   {
                     image: techImg,
@@ -194,7 +209,8 @@ function Home() {
                   {
                     image: hrImg,
                     icon:<BsBarChart size={20}/>,
-                    title:"Track progress wit performance graphs and topic analysis."
+                    title:"Track Performance",
+                    desc:"Track progress with performance graphs and topic analysis."
                   },
                 ].map((item,index)=>(
                     <motion.div key={index}
@@ -205,7 +221,7 @@ function Home() {
                     className='bg-white border border-gray-200 rounded-3xl p-8 
                     shadow-sm hover:shadow-xl transition-all'>
                       <div className='flex flex-col md:flex-row items-center gap-8'>
-                        <div className='-fullmd:w-1/2 flex justify-center'>
+                        <div className='w-full md:w-1/2 flex justify-center'>
                         <img src={item.image} alt={item.title}
                         className='w-full h-auto object-contain max-h-64'/>
                         </div>
@@ -241,7 +257,7 @@ function Home() {
                   {
                     image: img1,
                     title:"HR Interview Mode",
-                    desc:"Behavorial and Communication based evaluation."
+                    desc:"Behavioral and Communication based evaluation."
                   },
                   {
                     image: techImg,

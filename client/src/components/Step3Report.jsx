@@ -113,11 +113,11 @@ function Step3Report({ report }) {
             and supporting answer with strong real-world examples.`;
         } else if (finalScore >= 5) {
             advice = 
-            `Good foundation shown. Improve clarity and struture. Practice deliverying concise, 
-            confider answe with stronger supporting examples.`;
+            `Good foundation shown. Improve clarity and structure. Practice delivering concise, 
+            confident answers with stronger supporting examples.`;
         } else{
             advice = 
-            `Signitificant improvement required. Foucs on structured thinking clarity, and confident
+            `Significant improvement required. Focus on structured thinking clarity, and confident
             delivery. Practice answering aloud regularly.`;
         }
         doc.setFillColor(255, 255, 255);
@@ -187,7 +187,7 @@ function Step3Report({ report }) {
                     </button>
 
                     <div >
-                        <h1 className="text-3xl font-bold flex-nowrap text-gray 800">
+                        <h1 className="text-3xl font-bold flex-nowrap text-gray-800">
                             Interview Analytics Dashboard
                         </h1>
                         <p className="text-gray-500 m-2">
@@ -282,7 +282,7 @@ function Step3Report({ report }) {
                     className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8">
                         <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-4 
                         sm:mb-6">
-                            Performace Trend
+                            Performance Trend
                         </h3>
 
                         <div className="h-64 sm:h-72">
@@ -320,7 +320,7 @@ function Step3Report({ report }) {
                                 <div className="flex flex-col sm:flex-row sm:justify-between 
                                 sm:item-start gap-3 mb-4">
                                     <div>
-                                        <p className="text-xs text-grau-400">
+                                        <p className="text-xs text-gray-400">
                                             Question {i + 1}
                                         </p>
 
