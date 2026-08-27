@@ -14,6 +14,7 @@ import { BsArrowRight } from "react-icons/bs";
 
 function Step2Interview({ interviewData, onFinish }) {
     const { interviewId, questions, userName, mode } = interviewData;  // const { interviewId, questions, userName } = interviewData;
+
     const [isIntroPhase, setIsIntroPhase] = useState(true);
 
     const [isMicOn, setIsMicOn] = useState(true);
@@ -35,6 +36,7 @@ function Step2Interview({ interviewData, onFinish }) {
     const videoRef = useRef(null);
 
     const currentQuestion = questions[currentIndex];
+
 
 
     // useEffect(()=>{
@@ -83,6 +85,7 @@ function Step2Interview({ interviewData, onFinish }) {
 
 
         const targetGender = mode === "HR" ? "male" : "female";
+
 
     useEffect(()=>{
         const loadVoices = () => {

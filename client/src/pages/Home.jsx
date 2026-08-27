@@ -22,7 +22,6 @@ import resumeImg from "../assets/resume.png";
 import pdfImg from "../assets/pdf.png";
 import analyticsImg from "../assets/history.png";
 import img1 from "../assets/img1.png";
-import { model } from 'mongoose';
 import Footer from '../components/Footer'
 
 function Home() {

@@ -37,6 +37,7 @@ export const logout = async (req, res) => {
     }
 }
 
+
 export const registerUser = async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body
@@ -120,3 +121,4 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({ message: `Login Error: ${error}` })
     }
 }
+
