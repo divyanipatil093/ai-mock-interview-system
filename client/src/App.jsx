@@ -11,8 +11,8 @@ import InterviewReport from "./pages/InterviewReport";
 import Pricing from "./pages/Pricing"; 
 import ResumeAnalyzer from "./pages/ResumeAnalyzer";
 
-export const ServerUrl = "http://localhost:8000"
-// export const ServerUrl = "https://ai-mock-interview-system-xacs.onrender.com"
+//export const ServerUrl = "http://localhost:8000"
+export const ServerUrl = "https://ai-mock-interview-system-xacs.onrender.com"
 
 
 function App() {
