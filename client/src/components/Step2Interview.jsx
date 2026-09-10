@@ -260,8 +260,9 @@ function Step2Interview({ interviewData, onFinish }) {
                 recognitionRef.current.start();
             } catch (error) {
                     console.error("Microphone start error:", error);
-            }
-        };
+                }
+        }
+    };
 
         const stopMic = () => {
             if (recognitionRef.current) {
