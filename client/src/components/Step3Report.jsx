@@ -331,7 +331,8 @@ function Step3Report({ report }) {
                                     </div>
 
                                     <div className="bg-green-100 text-green-600 px-3 py-1
-                                    rounded-full font-bold text-xs sm:text-sm w-fit">
+                                    rounded-full font-bold text-xs sm:text-sm w-16 h-12
+                                    flex items-center justify-center shrink-0">
                                         {q.score ?? 0}/10
                                     </div>
                                 </div>
