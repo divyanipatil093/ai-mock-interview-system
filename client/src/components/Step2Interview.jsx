@@ -258,7 +258,8 @@ function Step2Interview({ interviewData, onFinish }) {
         if(recognitionRef.current && !isAIPlaying) {
             try {
                 recognitionRef.current.start();
-            } catch { }
+            } catch (error) {
+                    console.error("Microphone start error:", error);
             }
         };
 
