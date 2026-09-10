@@ -14,7 +14,7 @@ function Timer({timeLeft, totalTime}) {
                 pathColor:"#10b981",
                 textColor: "#ef4444",
                 trailColor: "#e5e7eb",
-            })}/>;
+            })}/>
         </div>
     )
 }
